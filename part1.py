@@ -68,7 +68,7 @@ def pLayer(state):
     # Convert state from hex to binary
     state = list(bin(int(state, 16))[2:].zfill(64))
     p_list = getPList()
-    for i in range(len(state)):
+    for i in range(len(p_list)):
         state[p_list[i]] = state[i]
     state = hex(int(''.join(state),2))
     print("P-Layer:", state)
@@ -79,8 +79,8 @@ def generateRoundKeys(plaintext, key, rounds):
     for i in range(rounds):
         c1 = addRoundKey(state, key)
         c2 = sBoxLayer(c1)
-        c3 = pLayer(c2)
-    return c3
+        state = pLayer(c2)
+    return state
 
 if __name__ == "__main__":
     # Plaintext
