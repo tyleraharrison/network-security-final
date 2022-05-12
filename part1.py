@@ -36,10 +36,10 @@ def pLayer(state):
 def generateRoundKeys(plaintext, key, rounds):
     state = plaintext
     for i in range(rounds):
-        state = addRoundKey(state, key)
-        state = sBoxLayer(state)
-        state = pLayer(state)
-    return state
+        c1 = addRoundKey(state, key)
+        c2 = sBoxLayer(c1)
+        c3 = pLayer(c2)
+    return c3
 
 if __name__ == "__main__":
     # Plaintext
