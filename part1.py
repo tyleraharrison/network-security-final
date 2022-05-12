@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 
 def addRoundKey(state, key):
+    # Plaintext
+    plain_int_val = int(state, 16)
+    # Convert to 64 bit binary
+    state = bin(plain_int_val)[2:].zfill(64)
+
+    # Key
+    key_int_val = int(key, 16)
+    # Convert to 64 bit binary
+    key = bin(key_int_val)[2:].zfill(64)
+    
     return_state = []
     for i in range(len(state)):
         return_state.append(int(state[i]) ^ int(key[i]))
@@ -23,8 +33,17 @@ def sBox(state):
     print("S-Box:", return_state)
     return return_state
 
-def invSBox(state):
-    return state
+def inv_SBox(state):
+    s_box = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
+    x_list = ["c", "5", "6", "b", "9", "0", "a", "d", "3", "e", "f", "8", "4", "7", "1", "2"]
+    return_state = ''
+    for i in range(len(state)):
+        if state[i] in x_list:    
+            return_state += s_box[x_list.index(state[i])]
+        else:
+            return_state += state[i]
+    print("S-Box:", return_state)
+    return return_state
 
 def sBoxLayer(state):
     state = sBox(state)
@@ -44,22 +63,12 @@ def generateRoundKeys(plaintext, key, rounds):
 if __name__ == "__main__":
     # Plaintext
     plaintext = "0x28B4D27B225F8BD8".lower()
-    plain_int_val = int(plaintext, 16)
-    # Convert to 64 bit binary
-    plain_bin_val = bin(plain_int_val)[2:].zfill(64)
     print("Plaintext:", plaintext)
-    # print("Plaintext (int):", plain_int_val)
-    # print("Plaintext (bin):", plain_bin_val)
 
     # Key
     key = "0x0123456789ABCDEF".lower()
-    key_int_val = int(key, 16)
-    # Convert to 64 bit binary
-    key_bin_val = bin(key_int_val)[2:].zfill(64)
     print("Key:", key)
-    # print("Key (int):", key_int_val)
-    # print("Key (bin):", key_bin_val)
 
     # Generate round keys (one iteration)
-    roundkeys = generateRoundKeys(plain_bin_val, key_bin_val, 1)
+    roundkeys = generateRoundKeys(plaintext, key, 1)
     print("Round keys:", roundkeys)
