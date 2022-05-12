@@ -24,8 +24,8 @@ def addRoundKey(state, key):
 def sBox(state):
     x_list = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
     s_box = ["c", "5", "6", "b", "9", "0", "a", "d", "3", "e", "f", "8", "4", "7", "1", "2"]
-    return_state = ''
-    for i in range(len(state)):
+    return_state = '0x'
+    for i in range(2, len(state)):
         if state[i] in x_list:    
             return_state += s_box[x_list.index(state[i])]
         else:
@@ -49,7 +49,29 @@ def sBoxLayer(state):
     state = sBox(state)
     return state
 
+def getPList():
+    p_list = []
+    # Order: 0, 16, 32, 48, 1, 17...
+    current_num = 0
+    increment = 0
+    while 63 not in p_list:
+        if current_num > 63:
+            increment += 1
+            current_num = increment
+            # p_list.append(current_num)
+        else:
+            p_list.append(current_num)
+            current_num += 16
+    return p_list
+
 def pLayer(state):
+    # Convert state from hex to binary
+    state = list(bin(int(state, 16))[2:].zfill(64))
+    p_list = getPList()
+    for i in range(len(state)):
+        state[p_list[i]] = state[i]
+    state = hex(int(''.join(state),2))
+    print("P-Layer:", state)
     return state
 
 def generateRoundKeys(plaintext, key, rounds):
