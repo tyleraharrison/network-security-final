@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+debug = False
+
 def get_keys(p, q, e, d):
     n = p * q
     pub_key = (e, n)
@@ -7,12 +9,13 @@ def get_keys(p, q, e, d):
     return pub_key, priv_key
 
 def encrypt(pub_key, plaintext):
+    global debug
     cipher_m = []
     plaintext = plaintext[2:]
     # Convert each hex character to its corresponding integer
     for i in plaintext:
         cipher_m.append(int(i, 16))
-    print("Plaintext List:", cipher_m)
+    print("Plaintext List:", cipher_m) if debug else None
     cipher = []
     # Encrypt each integer
     for i in cipher_m:
@@ -21,6 +24,7 @@ def encrypt(pub_key, plaintext):
     return cipher
 
 def decrypt(priv_key, cipher):
+    global debug
     hex_list = []
     plaintext = []
     # Decrypt each integer
@@ -28,7 +32,7 @@ def decrypt(priv_key, cipher):
         # Dpriv(c) = c^d mod n
         hex_list.append(i ** priv_key[0] % priv_key[1])
     print()
-    print("Decrypted list:", hex_list)
+    print("Decrypted list:", hex_list) if debug else None
     for i in hex_list:
         # Convert each integer to its corresponding hex character
         plaintext.append(hex(i)[2:])
@@ -36,6 +40,7 @@ def decrypt(priv_key, cipher):
     return plaintext
 
 if __name__ == '__main__':
+    debug = True
     p = 47
     q = 71
     e = 97
