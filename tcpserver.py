@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from part2 import *
+from th_rsa import *
 import socket                                         
 
 # create a TCP/IP socket object
