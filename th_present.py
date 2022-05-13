@@ -74,6 +74,17 @@ def pLayer(state):
     print("P-Layer:", state)
     return state
 
+def inv_pLayer(state):
+    # Convert state from hex to binary
+    state = list(bin(int(state, 16))[2:].zfill(64))
+    return_state = list("".zfill(64))
+    p_list = getPList()
+    for i in range(len(p_list)):
+        return_state[i] = state[p_list[i]]
+    return_state = hex(int(''.join(state), 2))
+    print("Inverse P-Layer:", return_state)
+    return return_state
+
 def generateRoundKeys(plaintext, key, rounds):
     state = plaintext
     for i in range(rounds):
