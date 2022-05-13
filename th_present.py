@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+debug = False
+
 def addRoundKey(state, key):
     # Plaintext
     plain_int_val = int(state, 16)
@@ -18,7 +20,7 @@ def addRoundKey(state, key):
     return_state = ''.join(str(x) for x in return_state)
     # Convert binary string to hex
     return_state = str(hex(int(return_state, 2)))
-    print("AddRoundKey:", return_state)
+    print("AddRoundKey:", return_state) if debug else None
     return return_state
 
 def sBox(state):
@@ -30,7 +32,7 @@ def sBox(state):
             return_state += s_box[x_list.index(state[i])]
         else:
             return_state += state[i]
-    print("S-Box:", return_state)
+    print("S-Box:", return_state) if debug else None
     return return_state
 
 def inv_sBox(state):
@@ -42,7 +44,7 @@ def inv_sBox(state):
             return_state += s_box[x_list.index(state[i])]
         else:
             return_state += state[i]
-    print("Inverse S-Box:", return_state)
+    print("Inverse S-Box:", return_state) if debug else None
     return return_state
 
 def sBoxLayer(state):
@@ -71,7 +73,7 @@ def pLayer(state):
     for i in range(len(p_list)):
         state[p_list[i]] = state[i]
     state = hex(int(''.join(state),2))
-    print("P-Layer:", state)
+    print("P-Layer:", state) if debug else None
     return state
 
 def inv_pLayer(state):
@@ -82,7 +84,7 @@ def inv_pLayer(state):
     for i in range(len(p_list)):
         return_state[i] = state[p_list[i]]
     return_state = hex(int(''.join(state), 2))
-    print("Inverse P-Layer:", return_state)
+    print("Inverse P-Layer:", return_state) if debug else None
     return return_state
 
 def generateRoundKeys(plaintext, key, rounds):
@@ -90,7 +92,15 @@ def generateRoundKeys(plaintext, key, rounds):
     for i in range(rounds):
         c1 = addRoundKey(state, key)
         c2 = sBoxLayer(c1)
-        state = pLayer(c2)
+        state = inv_pLayer(c2)
+    return state
+
+def inv_generateRoundKeys(ciphertext, key, rounds):
+    state = ciphertext
+    for i in range(rounds):
+        c1 = inv_pLayer(state)
+        c2 = inv_sBox(c1)
+        state = addRoundKey(c2, key)
     return state
 
 if __name__ == "__main__":
@@ -105,3 +115,6 @@ if __name__ == "__main__":
     # Generate round keys (one iteration)
     roundkeys = generateRoundKeys(plaintext, key, 1)
     print("Round keys:", roundkeys)
+
+    # Decrypt
+    print("\nDecrypted:", inv_generateRoundKeys(roundkeys, key, 1))
