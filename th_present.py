@@ -33,16 +33,16 @@ def sBox(state):
     print("S-Box:", return_state)
     return return_state
 
-def inv_SBox(state):
+def inv_sBox(state):
     s_box = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"]
     x_list = ["c", "5", "6", "b", "9", "0", "a", "d", "3", "e", "f", "8", "4", "7", "1", "2"]
-    return_state = ''
-    for i in range(len(state)):
+    return_state = '0x'
+    for i in range(2, len(state)):
         if state[i] in x_list:    
             return_state += s_box[x_list.index(state[i])]
         else:
             return_state += state[i]
-    print("S-Box:", return_state)
+    print("Inverse S-Box:", return_state)
     return return_state
 
 def sBoxLayer(state):
