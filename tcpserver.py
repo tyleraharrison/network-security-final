@@ -44,18 +44,20 @@ def get_session_key():
    print("Decrypted:", session_key)
    msg = 'Session key received'+ "\n"
    clientsocket.send(msg.encode())
+   return session_key
 
-def get_message():
+def get_message(session_key):
    # Receive the data of 1024 bytes maximum. The received data is binary data. 
    data = clientsocket.recv(1024).decode()
-   decrypted = data
+   hex_session_key = hex(session_key)
+   decrypted = inv_generateRoundKeys(data, hex_session_key, 1)
    print("\n[Client] " + data)
    print("Decrypted:", decrypted)
    msg = 'Message received'+ "\n"
    clientsocket.send(msg.encode())
 
 session_key = get_session_key()
-get_message()
+get_message(session_key)
 clientsocket.close()
 serversocket.close()
 print("\nServer closed")

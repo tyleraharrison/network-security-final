@@ -37,11 +37,15 @@ s.send(message.encode())
 msg = s.recv(1024)
 print("[Server] " + msg.decode())
 
-# Send the message to the server
-message = "Hello, server!"
+# Prepare message for sending
+message = "0x28B4D27B225F8BD8".lower()
 print("Sending message:", message)
-s.send(message.encode())
 
+# Encrypt the message with the session key
+encrypted_message = generateRoundKeys(message, hex_session_key, 1)
+s.send(encrypted_message.encode())
+
+# Send the message to the server
 msg = s.recv(1024)
 print("[Server] " + msg.decode())
 
